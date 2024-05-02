@@ -411,37 +411,55 @@ const ExcelSheet = () => {
                 />
               </td>
               {/* Consignor Name Input */}
-              <td className="px-6 py-4 whitespace-nowrap">
+              <td className="px-6 py-4 whitespace-nowrap border">
                 <input
                   type="text"
                   value={row.consignor}
                   onChange={(e) =>
                     handleInputChange(e.target.value, index, "consignor")
                   }
-                  className="border border-gray-300 p-2"
+                  className="border border-gray-300 p-2 w-full"
+                  list="consignorSuggestions"
                 />
+                <datalist id="consignorSuggestions">
+                  {consignorSuggestions.map((suggestion, i) => (
+                    <option key={i} value={suggestion} />
+                  ))}
+                </datalist>
               </td>
               {/* Consignee Name Input */}
-              <td className="px-6 py-4 whitespace-nowrap">
+              <td className="px-6 py-4 whitespace-nowrap border">
                 <input
                   type="text"
                   value={row.consignee}
                   onChange={(e) =>
                     handleInputChange(e.target.value, index, "consignee")
                   }
-                  className="border border-gray-300 p-2"
+                  className="border border-gray-300 p-2 w-full"
+                  list="consigneeSuggestions"
                 />
+                <datalist id="consigneeSuggestions">
+                  {consigneeSuggestions.map((suggestion, i) => (
+                    <option key={i} value={suggestion} />
+                  ))}
+                </datalist>
               </td>
               {/* GST Paid By Input */}
-              <td className="px-6 py-4 whitespace-nowrap">
+              <td className="px-6 py-4 whitespace-nowrap border">
                 <input
                   type="text"
                   value={row.gstPaidBy}
                   onChange={(e) =>
                     handleInputChange(e.target.value, index, "gstPaidBy")
                   }
-                  className="border border-gray-300 p-2"
+                  className="border border-gray-300 p-2 w-full"
+                  list="gstPaidBySuggestions"
                 />
+                <datalist id="gstPaidBySuggestions">
+                  {gstPaidBySuggestions.map((suggestion, i) => (
+                    <option key={i} value={suggestion} />
+                  ))}
+                </datalist>
               </td>
             </tr>
           ))}

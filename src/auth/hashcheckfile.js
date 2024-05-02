@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const storedHashValue = "A@!34#4";
+const storedHashValue = "Ahm@2719";
 
 const checkHash = (inputValue, handleAuthentication) => {
   if (inputValue === storedHashValue) {
@@ -29,7 +29,7 @@ const Hash = ({ handleAuthentication }) => {
       <div className="relative">
         <input
           type="text"
-          placeholder="Enter Hash Value"
+          placeholder="Enter Password Value"
           value={inputValue}
           onChange={handleChange}
           onKeyPress={handleKeyPress}
@@ -39,7 +39,7 @@ const Hash = ({ handleAuthentication }) => {
           className="w-10 bg-blue-500 text-white py-2 rounded"
           onClick={() => checkHash(inputValue, handleAuthentication)}
         >
-          Check Hash
+          Check Password
         </button>
       </div>
     </form>
