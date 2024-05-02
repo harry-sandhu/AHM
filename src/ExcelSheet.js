@@ -349,37 +349,37 @@ const ExcelSheet = () => {
           <tr>
             <th
               scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              className=" text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-50px"
             >
               Bilty Number
             </th>
             <th
               scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
               Date
             </th>
             <th
               scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
               Freight
             </th>
             <th
               scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              className=" text-left text-xs font-medium text-gray-500 uppercase tracking-widerw-25"
             >
               Consignor Name
             </th>
             <th
               scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              className=" text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-25"
             >
               Consignee Name
             </th>
             <th
               scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              className=" text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-10"
             >
               GST Paid By
             </th>
@@ -390,18 +390,18 @@ const ExcelSheet = () => {
           {data.map((row, index) => (
             <tr key={index}>
               {/* Bilty Number Input */}
-              <td className="px-6 py-4 whitespace-nowrap">
+              <td className=" whitespace-nowrap">
                 <input
                   type="text"
                   value={row.serialNumber}
                   onChange={(e) =>
                     handleInputChange(e.target.value, index, "serialNumber")
                   }
-                  className="border border-gray-300 p-2"
+                  className="border border-gray-300 "
                 />
               </td>
               {/* Date Input */}
-              <td className="px-6 py-4 whitespace-nowrap">
+              <td className=" whitespace-nowrap">
                 <DatePicker
                   selected={row.date ? new Date(row.date) : null}
                   onChange={(date) =>
@@ -411,30 +411,30 @@ const ExcelSheet = () => {
                       "date"
                     )
                   }
-                  className="border border-gray-300 p-2"
+                  className="border border-gray-300 "
                   dateFormat="yyyy-MM-dd"
                 />
               </td>
               {/* Freight Input */}
-              <td className="px-6 py-4 whitespace-nowrap">
+              <td className=" whitespace-nowrap">
                 <input
                   type="text"
                   value={row.freight}
                   onChange={(e) =>
                     handleInputChange(e.target.value, index, "freight")
                   }
-                  className="border border-gray-300 p-2"
+                  className="border border-gray-300 "
                 />
               </td>
               {/* Consignor Name Input */}
-              <td className="px-6 py-4 whitespace-nowrap border">
+              <td className=" whitespace-nowrap border">
                 <input
                   type="text"
                   value={row.consignor}
                   onChange={(e) =>
                     handleInputChange(e.target.value, index, "consignor")
                   }
-                  className="border border-gray-300 p-2 w-full"
+                  className="border border-gray-300  "
                   list="consignorSuggestions"
                 />
                 <datalist id="consignorSuggestions">
@@ -444,14 +444,14 @@ const ExcelSheet = () => {
                 </datalist>
               </td>
               {/* Consignee Name Input */}
-              <td className="px-6 py-4 whitespace-nowrap border">
+              <td className=" whitespace-nowrap border">
                 <input
                   type="text"
                   value={row.consignee}
                   onChange={(e) =>
                     handleInputChange(e.target.value, index, "consignee")
                   }
-                  className="border border-gray-300 p-2 w-full"
+                  className="border border-gray-300  "
                   list="consigneeSuggestions"
                 />
                 <datalist id="consigneeSuggestions">
@@ -461,14 +461,14 @@ const ExcelSheet = () => {
                 </datalist>
               </td>
               {/* GST Paid By Input */}
-              <td className="px-6 py-4 whitespace-nowrap border">
+              <td className="whitespace-nowrap border">
                 <input
                   type="text"
                   value={row.gstPaidBy}
                   onChange={(e) =>
                     handleInputChange(e.target.value, index, "gstPaidBy")
                   }
-                  className="border border-gray-300 p-2 w-full"
+                  className="border border-gray-300  "
                   list="gstPaidBySuggestions"
                 />
                 <datalist id="gstPaidBySuggestions">
