@@ -25,7 +25,7 @@ const Hash = ({ handleAuthentication }) => {
   };
 
   return (
-    <form className="flex justify-center items-center h-screen max-w-10">
+    <form className="flex justify-center items-center h-screen ">
       <div className="relative">
         <input
           type="text"
@@ -36,7 +36,7 @@ const Hash = ({ handleAuthentication }) => {
           className="mb-4 w-full p-3 border rounded outline-none"
         />
         <button
-          className="w-10 bg-blue-500 text-white py-2 rounded"
+          className="w-20 bg-blue-500 text-white py-2 rounded "
           onClick={() => checkHash(inputValue, handleAuthentication)}
         >
           Check Password
