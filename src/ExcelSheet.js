@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import * as XLSX from "xlsx";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const ExcelSheet = () => {
   const [data, setData] = useState([
@@ -18,9 +20,6 @@ const ExcelSheet = () => {
   const [initialBiltyNumber, setInitialBiltyNumber] = useState("");
   const [showInitialBiltyPopup, setShowInitialBiltyPopup] = useState(true);
 
-  const serialNumberSuggestions = ["SN1", "SN2", "SN3", "SN4"];
-  const dateSuggestions = ["2024-03-01", "2024-03-02", "2024-03-03"];
-  const freightSuggestions = ["$100", "$200", "$300"];
   const consignorSuggestions = [
     "goyal oil delhi.07aeepg9131l1ze",
     "aar chem india 05aapfa2679a1zm",
@@ -280,7 +279,12 @@ const ExcelSheet = () => {
     "zaid plywood meerut 09angpg3390l1zo",
     "windsor wood delhi 07bfhps4524n1zx",
   ];
-  const gstPaidBySuggestions = ["Consignor", "Consignee", "Transporter"];
+  const gstPaidBySuggestions = [
+    "Consignor",
+    "Consignee",
+    "Transporter",
+    "Exampted",
+  ];
 
   useEffect(() => {
     // Remove bilty number suggestions after initial value is entered
@@ -306,6 +310,8 @@ const ExcelSheet = () => {
       );
       return;
     }
+
+    const previousRowDate = data[data.length - 1].date;
     setData([
       ...data,
       {
@@ -313,7 +319,7 @@ const ExcelSheet = () => {
         serialNumber: (
           parseInt(data[data.length - 1].serialNumber) + 1
         ).toString(),
-        date: "",
+        date: previousRowDate,
         freight: "",
         consignor: "",
         consignee: "",
@@ -331,9 +337,15 @@ const ExcelSheet = () => {
 
   return (
     <div className="overflow-x-auto">
+      <button
+        onClick={saveAsExcel}
+        className="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded border border-green-700"
+      >
+        Save as Excel
+      </button>
       <table className="min-w-full divide-y divide-gray-200">
         {/* Table header */}
-        <thead className="bg-gray-50">
+        <thead className="bg-gray-50 sticky top-0 z-10">
           <tr>
             <th
               scope="col"
@@ -390,13 +402,17 @@ const ExcelSheet = () => {
               </td>
               {/* Date Input */}
               <td className="px-6 py-4 whitespace-nowrap">
-                <input
-                  type="text"
-                  value={row.date}
-                  onChange={(e) =>
-                    handleInputChange(e.target.value, index, "date")
+                <DatePicker
+                  selected={row.date ? new Date(row.date) : null}
+                  onChange={(date) =>
+                    handleInputChange(
+                      date ? date.toISOString().slice(0, 10) : "",
+                      index,
+                      "date"
+                    )
                   }
                   className="border border-gray-300 p-2"
+                  dateFormat="yyyy-MM-dd"
                 />
               </td>
               {/* Freight Input */}
@@ -475,12 +491,6 @@ const ExcelSheet = () => {
           Add Row
         </button>
         {/* Save as Excel Button */}
-        <button
-          onClick={saveAsExcel}
-          className="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded border border-green-700"
-        >
-          Save as Excel
-        </button>
       </div>
     </div>
   );

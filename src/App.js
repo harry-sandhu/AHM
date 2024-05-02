@@ -2,6 +2,7 @@ import "./App.css";
 import React, { useState } from "react";
 import Hash from "./auth/hashcheckfile";
 import ExcelSheet from "./ExcelSheet";
+
 const App = () => {
   const [authenticated, setAuthenticated] = useState(false);
 
@@ -14,7 +15,11 @@ const App = () => {
       {!authenticated ? (
         <Hash handleAuthentication={handleAuthentication} />
       ) : (
-        <ExcelSheet />
+        <div className="h-screen overflow-y-auto">
+          {" "}
+          {/* Add this wrapping div */}
+          <ExcelSheet />
+        </div>
       )}
     </div>
   );
