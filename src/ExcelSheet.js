@@ -4,7 +4,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 const ExcelSheet = () => {
-  const [data, setData] = useState([
+  const initialData = JSON.parse(localStorage.getItem("excelData")) || [
     {
       id: 1,
       serialNumber: "",
@@ -14,11 +14,11 @@ const ExcelSheet = () => {
       consignee: "",
       gstPaidBy: "",
     },
-  ]);
+  ];
 
   // Suggestions for each column
+  const [data, setData] = useState(initialData);
   const [initialBiltyNumber, setInitialBiltyNumber] = useState("");
-  const [showInitialBiltyPopup, setShowInitialBiltyPopup] = useState(true);
 
   const consignorSuggestions = [
     "goyal oil delhi.07aeepg9131l1ze",
@@ -287,6 +287,10 @@ const ExcelSheet = () => {
   ];
 
   useEffect(() => {
+    localStorage.setItem("excelData", JSON.stringify(data));
+  }, [data]);
+
+  useEffect(() => {
     // Remove bilty number suggestions after initial value is entered
     if (initialBiltyNumber !== "") {
       const updatedData = [...data];
@@ -335,6 +339,13 @@ const ExcelSheet = () => {
     XLSX.writeFile(wb, "excel_sheet.xlsx");
   };
 
+  const clearAllRows = () => {
+    // Keep only the first row in the data state
+    const newData = data.slice(0, 1);
+    setData(newData);
+    localStorage.setItem("excelData", JSON.stringify(newData));
+  };
+
   return (
     <div className="overflow-x-auto">
       <button
@@ -342,6 +353,12 @@ const ExcelSheet = () => {
         className="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded border border-green-700"
       >
         Save as Excel
+      </button>
+      <button
+        onClick={clearAllRows}
+        className="ml-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded border border-red-700"
+      >
+        Clear All Rows
       </button>
       <table className="min-w-full divide-y divide-gray-200">
         {/* Table header */}
