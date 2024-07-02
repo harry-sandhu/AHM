@@ -5,7 +5,7 @@ import Hash from "./auth/hashcheckfile";
 import ExcelSheet from "./ExcelSheet";
 
 const App = () => {
-  const [authenticated, setAuthenticated] = useState(true);
+  const [authenticated, setAuthenticated] = useState(false);
 
   const handleAuthentication = () => {
     setAuthenticated(true);
