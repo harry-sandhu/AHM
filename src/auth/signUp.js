@@ -1,5 +1,5 @@
 // src/pages/SignUp.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import OtpPopup from "../components/otpVerification";
 
@@ -34,6 +34,18 @@ const SignUp = ({ history }) => {
     setShowOtpPopup(false);
     history.push("/home");
   };
+
+  useEffect(() => {
+    fetch("https://ahmserver.vercel.app/test-cors")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => console.log(data.message))
+      .catch((error) => console.log(error.message));
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">

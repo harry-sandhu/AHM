@@ -15,7 +15,7 @@ const OtpPopup = ({ formData, onClose, onSuccess }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:80/api/OTP/verify-otp",
+        "https://ahmserver.vercel.app/api/OTP/verify-otp",
         payload
       );
       console.log("Response:", response.data);
