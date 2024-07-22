@@ -95,7 +95,7 @@ const Hash = ({ handleAuthentication }) => {
         </div>
 
         <div className="md:block hidden w-1/2 ">
-          <img className="rounded-2xl" src="Images/truck.jpg" alt="Login" />
+          <img className="rounded-2xl" src="Images/signup.jpeg" alt="Login" />
         </div>
       </div>
     </section>

@@ -13,7 +13,7 @@ const ExcelSheet = () => {
   const initialData = JSON.parse(localStorage.getItem("excelData")) || [
     {
       id: 1,
-      serialNumber: "",
+      biltyNumber: "",
       date: "",
       freight: "",
       consignor: "",
@@ -80,7 +80,7 @@ const ExcelSheet = () => {
     if (initialBiltyNumber !== "") {
       const updatedData = [...data];
       updatedData.forEach((row) => {
-        delete row.serialNumber;
+        delete row.biltyNumber;
       });
       setData(updatedData);
     }
@@ -95,7 +95,7 @@ const ExcelSheet = () => {
   const addRow = async () => {
     const currentRow = data[data.length - 1];
 
-    if (!currentRow.serialNumber) {
+    if (!currentRow.biltyNumber) {
       alert(
         "Please fill the Bilty Number in the current row before adding a new row."
       );
@@ -129,7 +129,7 @@ const ExcelSheet = () => {
         ...data,
         {
           id: data.length + 1,
-          serialNumber: (parseInt(currentRow.serialNumber) + 1).toString(),
+          biltyNumber: (parseInt(currentRow.biltyNumber) + 1).toString(),
           date: previousRowDate,
           freight: "",
           consignor: "",
@@ -143,7 +143,12 @@ const ExcelSheet = () => {
   };
 
   const saveAsExcel = () => {
-    const ws = XLSX.utils.json_to_sheet(data);
+    const dataWithFloatFreight = data.map((row) => ({
+      ...row,
+      freight: parseFloat(row.freight) || 0, // Convert freight to float, default to 0 if conversion fails
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(dataWithFloatFreight);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
     XLSX.writeFile(wb, "excel_sheet.xlsx");
@@ -219,9 +224,9 @@ const ExcelSheet = () => {
               <td className=" whitespace-nowrap w-28 ">
                 <input
                   type="text"
-                  value={row.serialNumber}
+                  value={row.biltyNumber}
                   onChange={(e) =>
-                    handleInputChange(e.target.value, index, "serialNumber")
+                    handleInputChange(e.target.value, index, "biltyNumber")
                   }
                   className="border border-gray-300 w-28 "
                 />

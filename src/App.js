@@ -1,29 +1,90 @@
-import "./App.css";
-import React, { useState } from "react";
-import { BrowserRouter as Router } from "react-router-dom";
-import Hash from "./auth/hashcheckfile";
-import ExcelSheet from "./ExcelSheet";
+// src/App.js
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
+import SignUp from "./auth/signUp";
+import SignIn from "./auth/signIn";
+import ForgotPassword from "./auth/hashcheckfile";
+import UpdateDetails from "./pages/accountSetting";
+import HomePage from "./pages/homePage";
+import ExcelPage from "./ExcelSheet";
 
-const App = () => {
-  const [authenticated, setAuthenticated] = useState(false);
+// Helper component to protect routes
+const PrivateRoute = ({ children }) => {
+  return localStorage.getItem("token") ? children : <Navigate to="/sign-in" />;
+};
 
-  const handleAuthentication = () => {
-    setAuthenticated(true);
-  };
+const PublicRoute = ({ children }) => {
+  return localStorage.getItem("token") ? <Navigate to="/home" /> : children;
+};
 
+function App() {
   return (
     <Router>
-      <div className="App font-roboto box-border m-0 p-0">
-        {!authenticated ? (
-          <Hash handleAuthentication={handleAuthentication} />
-        ) : (
-          <div className="h-screen overflow-y-auto">
-            <ExcelSheet />
-          </div>
-        )}
-      </div>
+      <Routes>
+        <Route
+          path="/sign-up"
+          element={
+            <PublicRoute>
+              <SignUp />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/sign-in"
+          element={
+            <PublicRoute>
+              <SignIn />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/forgot-password"
+          element={
+            <PublicRoute>
+              <ForgotPassword />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/update-details"
+          element={
+            <PrivateRoute>
+              <UpdateDetails />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/home"
+          element={
+            <PrivateRoute>
+              <HomePage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/excel"
+          element={
+            <PrivateRoute>
+              <ExcelPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="*"
+          element={
+            <Navigate
+              to={localStorage.getItem("token") ? "/home" : "/sign-up"}
+            />
+          }
+        />
+      </Routes>
     </Router>
   );
-};
+}
 
 export default App;
