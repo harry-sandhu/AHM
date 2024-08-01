@@ -1,12 +1,14 @@
-// src/pages/SignIn.js
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-const SignIn = ({ history }) => {
+const SignIn = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -20,7 +22,7 @@ const SignIn = ({ history }) => {
         formData
       );
       localStorage.setItem("token", response.data.token);
-      history.push("/home");
+      navigate("/home");
     } catch (error) {
       console.error("Error signing in", error);
     }
