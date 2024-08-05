@@ -22,11 +22,15 @@ const ExcelSheet = () => {
     },
   ];
 
-  // Suggestions for each column
   const [data, setData] = useState(initialData);
   const [initialBiltyNumber, setInitialBiltyNumber] = useState("");
   const [consignorSuggestions, setConsignorSuggestion] = useState([]);
   const [consigneeSuggestions, setConsigneeSuggestion] = useState([]);
+  const [filteredConsignorSuggestions, setFilteredConsignorSuggestions] =
+    useState([]);
+  const [filteredConsigneeSuggestions, setFilteredConsigneeSuggestions] =
+    useState([]);
+
   useEffect(() => {
     const getConsignors = async () => {
       try {
@@ -39,11 +43,12 @@ const ExcelSheet = () => {
 
     getConsignors();
   }, []);
+
   useEffect(() => {
     const getConsignees = async () => {
       try {
-        const consignors = await fetchConsignees();
-        setConsigneeSuggestion(consignors);
+        const consignees = await fetchConsignees();
+        setConsigneeSuggestion(consignees);
       } catch (error) {
         console.error(error);
       }
@@ -56,7 +61,7 @@ const ExcelSheet = () => {
     "Consignor",
     "Consignee",
     "Transporter",
-    "Exampted",
+    "Exempted",
   ];
 
   useEffect(() => {
@@ -90,6 +95,22 @@ const ExcelSheet = () => {
     const updatedData = [...data];
     updatedData[rowIndex][columnName] = value;
     setData(updatedData);
+
+    if (columnName === "consignor") {
+      setFilteredConsignorSuggestions(
+        consignorSuggestions.filter((suggestion) =>
+          suggestion.toLowerCase().startsWith(value.toLowerCase())
+        )
+      );
+    }
+
+    if (columnName === "consignee") {
+      setFilteredConsigneeSuggestions(
+        consigneeSuggestions.filter((suggestion) =>
+          suggestion.toLowerCase().startsWith(value.toLowerCase())
+        )
+      );
+    }
   };
 
   const addRow = async () => {
@@ -106,22 +127,21 @@ const ExcelSheet = () => {
       const apiCalls = [];
 
       if (currentRow.consignor) {
-        console.log("cosignor called");
+        console.log("Consignor called");
         apiCalls.push(addConsignor(currentRow.consignor));
       }
 
       if (currentRow.consignee) {
-        console.log("consignee called");
+        console.log("Consignee called");
         apiCalls.push(addConsignee(currentRow.consignee));
       }
 
       // Execute API calls asynchronously without waiting
-      Promise.allSettled(apiCalls).then((results) => {
-        results.forEach((result) => {
-          if (result.status === "rejected") {
-            console.error("Error adding consignor/consignee:", result.reason);
-          }
-        });
+      const results = await Promise.allSettled(apiCalls);
+      results.forEach((result) => {
+        if (result.status === "rejected") {
+          console.error("Error adding consignor/consignee:", result.reason);
+        }
       });
 
       const previousRowDate = currentRow.date;
@@ -145,7 +165,7 @@ const ExcelSheet = () => {
   const saveAsExcel = () => {
     const dataWithFloatFreight = data.map((row) => ({
       ...row,
-      freight: parseFloat(row.freight) || 0, // Convert freight to float, default to 0 if conversion fails
+      freight: parseFloat(row.freight) || 0,
     }));
 
     const ws = XLSX.utils.json_to_sheet(dataWithFloatFreight);
@@ -161,7 +181,7 @@ const ExcelSheet = () => {
   };
 
   return (
-    <div className="overflow-x-auto  ">
+    <div className="overflow-x-auto">
       <button
         onClick={saveAsExcel}
         className="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded border border-green-700"
@@ -175,7 +195,6 @@ const ExcelSheet = () => {
         Clear All Rows
       </button>
       <table className="min-w-full divide-y divide-gray-200">
-        {/* Table header */}
         <thead className="bg-gray-50 sticky top-0 z-10">
           <tr>
             <th
@@ -216,11 +235,9 @@ const ExcelSheet = () => {
             </th>
           </tr>
         </thead>
-        {/* Table body */}
         <tbody className="bg-white divide-y divide-gray-200">
           {data.map((row, index) => (
             <tr key={index}>
-              {/* Bilty Number Input */}
               <td className=" whitespace-nowrap w-28 ">
                 <input
                   type="text"
@@ -231,7 +248,6 @@ const ExcelSheet = () => {
                   className="border border-gray-300 w-28 "
                 />
               </td>
-              {/* Date Input */}
               <td className=" whitespace-nowrap w-28">
                 <DatePicker
                   selected={row.date ? new Date(row.date) : null}
@@ -246,7 +262,6 @@ const ExcelSheet = () => {
                   dateFormat="yyyy-MM-dd"
                 />
               </td>
-              {/* Freight Input */}
               <td className=" whitespace-nowrap w-20">
                 <input
                   type="text"
@@ -257,7 +272,6 @@ const ExcelSheet = () => {
                   className="border border-gray-300  w-20"
                 />
               </td>
-              {/* Consignor Name Input */}
               <td className=" whitespace-nowrap border w-80">
                 <input
                   type="text"
@@ -269,12 +283,11 @@ const ExcelSheet = () => {
                   list="consignorSuggestions"
                 />
                 <datalist id="consignorSuggestions">
-                  {consignorSuggestions.map((suggestion, i) => (
+                  {filteredConsignorSuggestions.map((suggestion, i) => (
                     <option key={i} value={suggestion} />
                   ))}
                 </datalist>
               </td>
-              {/* Consignee Name Input */}
               <td className=" whitespace-nowrap border w-80">
                 <input
                   type="text"
@@ -286,12 +299,11 @@ const ExcelSheet = () => {
                   list="consigneeSuggestions"
                 />
                 <datalist id="consigneeSuggestions">
-                  {consigneeSuggestions.map((suggestion, i) => (
+                  {filteredConsigneeSuggestions.map((suggestion, i) => (
                     <option key={i} value={suggestion} />
                   ))}
                 </datalist>
               </td>
-              {/* GST Paid By Input */}
               <td className="whitespace-nowrap border w-28">
                 <input
                   type="text"
@@ -312,7 +324,6 @@ const ExcelSheet = () => {
           ))}
         </tbody>
       </table>
-      {/* Buttons */}
       <div className="">
         <button
           onClick={addRow}
