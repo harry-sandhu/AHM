@@ -69,19 +69,6 @@ const ExcelSheet = () => {
   }, [data]);
 
   useEffect(() => {
-    const updatedData = data.map((row) => {
-      if (row.consignor && !row.gstPaidBy) {
-        row.gstPaidBy = "Consignor";
-      } else if (row.consignee && !row.gstPaidBy) {
-        row.gstPaidBy = "Consignee";
-      }
-      return row;
-    });
-
-    setData(updatedData);
-  }, [data]);
-
-  useEffect(() => {
     if (initialBiltyNumber !== "") {
       const updatedData = [...data];
       updatedData.forEach((row) => {
@@ -94,6 +81,23 @@ const ExcelSheet = () => {
   const handleInputChange = (value, rowIndex, columnName) => {
     const updatedData = [...data];
     updatedData[rowIndex][columnName] = value;
+
+    if (columnName === "consignor" || columnName === "consignee") {
+      if (updatedData[rowIndex].consignor && !updatedData[rowIndex].consignee) {
+        updatedData[rowIndex].gstPaidBy = "Consignor";
+      } else if (
+        updatedData[rowIndex].consignee &&
+        !updatedData[rowIndex].consignor
+      ) {
+        updatedData[rowIndex].gstPaidBy = "Consignee";
+      } else if (
+        !updatedData[rowIndex].consignor &&
+        !updatedData[rowIndex].consignee
+      ) {
+        updatedData[rowIndex].gstPaidBy = ""; // Clear the GST Paid By if both are empty
+      }
+    }
+
     setData(updatedData);
 
     if (columnName === "consignor") {
@@ -126,12 +130,18 @@ const ExcelSheet = () => {
     try {
       const apiCalls = [];
 
-      if (currentRow.consignor) {
+      if (
+        currentRow.consignor &&
+        !consignorSuggestions.includes(currentRow.consignor)
+      ) {
         console.log("Consignor called");
         apiCalls.push(addConsignor(currentRow.consignor));
       }
 
-      if (currentRow.consignee) {
+      if (
+        currentRow.consignee &&
+        !consigneeSuggestions.includes(currentRow.consignee)
+      ) {
         console.log("Consignee called");
         apiCalls.push(addConsignee(currentRow.consignee));
       }
@@ -240,7 +250,7 @@ const ExcelSheet = () => {
             <tr key={index}>
               <td className=" whitespace-nowrap w-28 ">
                 <input
-                  type="text"
+                  type="number"
                   value={row.biltyNumber}
                   onChange={(e) =>
                     handleInputChange(e.target.value, index, "biltyNumber")
@@ -264,7 +274,7 @@ const ExcelSheet = () => {
               </td>
               <td className=" whitespace-nowrap w-20">
                 <input
-                  type="text"
+                  type="number"
                   value={row.freight}
                   onChange={(e) =>
                     handleInputChange(e.target.value, index, "freight")
